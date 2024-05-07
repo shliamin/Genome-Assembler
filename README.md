@@ -1,25 +1,4 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/lnnjL7EC)
-# Abschlussaufgabe
 
-In der Abschlussaufgabe erweitern Sie den Mapper um die Ausgabe der Minimalversion eines Standard-Dateiformats, welches Ihnen die Visualisierung Ihrer Ergebnisse mit üblichen Bioinformatik-Tools erlaubt. Zudem implementieren Sie k-mer-Spektrum basierte Fehlerkorrektur, um trotz Sequenzierfehlern im Datensatz belastbare Aussagen treffen zu können. Abschließend nutzen Sie Ihren Code, um bei vier Infektionen jeweils die zur Behandlung einsetzbaren Antibiotika vorzuschlagen. 
-
-Sie finden zu diesem Zweck in dem repository bereits die Musterlösung für die Mapping-Aufgabe. Sie können diese aber sehr gerne durch Ihre eigene Lösung aus der letzten Aufgabe ersetzen - ich denke, es macht mehr Spaß, am eigenen Code zu arbeiten! 
-
-## Benotung
-
-Zunächst aber die für Sie vermutlich besonders interessante Information, wo Sie Ihre Punkte herbekommen. Neben der Implementation gibt es Punkte für:
-
-* Die Tablet-Aufgabe beim SAM-Export: Für die Identifikation der korrekten vier Basenaustausche in dem Mapping gibt es 5 Punkte.
-* Für die erste Antibiotika-Empfehlung gibt es 10 Punkte (2.5 pro Person)
-* Für die zweite Antibiotika-Empfehlung gibt es 10 Punkte (2.5 pro Person)
-* Für die Erklärung der Unterschiede gibt es 10 Punkte
-
-Insgesamt gibt es also für den Verständnisteil 35 Punkte zu bekommen, die restlichen 65 Punkte bekommen Sie für die Implementation:
-* 25 Punkte für den SAM-Export
-* 40 Punkte für die Fehlerkorrektur
-
-## Weitere Vorgaben
-Zur Lösung der Aufgaben sind keine Module/ Bibliotheken notwendig. Wenn Sie der Meinung sind, dass Sie ein Modul importieren müssten, dann schreiben Sie mich bitte an.
 
 ## SAM-Dateien und Visualisierung von Mappings
 
