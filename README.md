@@ -1,76 +1,76 @@
 
 
-## SAM-Dateien und Visualisierung von Mappings
+## SAM Files and Visualization of Mappings
 
-Für die Liste von mappenden Reads, die Sie in der letzten Aufgabe ausgegeben haben, gibt es auch ein Standard-Format in der Bioinformatik: Das [Sequence Alignment/Map Format, kurz SAM](http://samtools.github.io/hts-specs/SAMv1.pdf). Es enthält Informationen über die in einem Mapping verwendete Referenzsequenz sowie die mappenden Reads. Die komplette Formatspezifikation mit allen speicherbaren Zusatzinformationen können Sie dem angegebenen Link entnehmen, wir verwenden nur einen Minimalversion. Eine beispielhafte SAM-Datei finden Sie unter [data/minimapping.sam](data/minimapping.sam).
+For the list of mapping reads that you output in the last task, there is also a standard format in bioinformatics: The Sequence Alignment/Map Format, or SAM. It contains information about the reference sequence used in a mapping as well as the mapping reads. You can find the complete format specification with all possible additional information at the given link; we use only a minimal version. An example SAM file can be found at data/minimapping.sam.
 
-Das SAM-Format ist zeilenbasiert, dabei enthält jede Zeile einen oder mehrere tab-separierte Einträge.
+The SAM format is line-based, with each line containing one or more tab-separated entries.
 
-Die SAM-Datei beginnt mit einer Header-Sektion, in der jede Zeile mit einem ```@``` anfängt. Der ```@SQ```-Header enthält dabei Informationen über die verwendete Referenzsequenz:
+The SAM file begins with a header section, where each line starts with an @. The @SQ header contains information about the reference sequence used:
 
 ```text
 @SQ	SN:GQ359764.1	LN:2445
 ```
 
-Die Felder ```SN:``` und ```LN:``` geben den Namen der Referenzsequenz (muss exakt der Name aus der verwendeten Referenz-FASTA-Datei bis zum ersten Leerzeichen sein) und ihre Länge an.
+The fields ```SN:``` and ```LN:``` indicate the name of the reference sequence (must be exactly the name from the reference FASTA file up to the first space) and its length.
 
-Dann folgen zeilenweise Informationen über die gemappten Reads. Jede Zeile muss dabei mindestens 11 Spalten enthalten:
+Then, line by line, information about the mapped reads follows. Each line must contain at least 11 columns:
 
-| Spalte | Feldname | N/A-Wert     | Beschreibung                                               |
-|--------|----------|--------------|------------------------------------------------------------|
-| 1      | QNAME    | erforderlich | Name des Reads                                             |
-| 2      | FLAG     | erforderlich | Bitweiser Flag. 0 für "mappt korrekt"                      |
-| 3      | RNAME    | *            | Name der Referenzsequenz (identisch mit SN: in @SQ-Header) |
-| 4      | POS      | 0            | Position in der Referenz (erste Base ist 1, nicht 0)       |
-| 5      | MAPQ     | 255          | Mapping-Qualität                                           |
-| 6      | CIGAR    | *            | CIGAR-String des Alignments                                |
-| 7      | RNEXT    | *            | Referenz, auf die der nächste Readteil mappt               |
-| 8      | PNEXT    | 0            | Position des nächsten Readteils                            |
-| 9      | TLEN     | 0            | Insert-Länge                                               |
-| 10     | SEQ      | *            | Readsequenz                                                |
-| 11     | QUAL     | *            | Basen-Qualität der Reads (wie in FASTQ-Datei)              |
+| Column | Field Name |N/A Value     | Description                                                     |
+|--------|------------|--------------|-----------------------------------------------------------------|
+| 1      | QNAME      | required     | Name of the read                                                |
+| 2      | FLAG       | required     | Bitwise flag. 0 for "maps correctly"                            |
+| 3      | RNAME      | *            | Name of the reference sequence (identical to SN: in @SQ header) |
+| 4      | POS        | 0            | Position in the reference (first base is 1, not 0)              |
+| 5      | MAPQ       | 255          | Mapping quality                                                 |
+| 6      | CIGAR      | *            | CIGAR string of the alignment                                   |
+| 7      | RNEXT      | *            | Reference where the next part of the read maps                  |
+| 8      | PNEXT      | 0            | Position of the next part of the read                           |
+| 9      | TLEN       | 0            | Insert length                                                   |
+| 10     | SEQ        | *            | Read sequence                                                   |
+| 11     | QUAL       | *            | Base quality of the reads (as in FASTQ file)                    |
 
-Um eine sinnvolle Visualisierung zu ermöglichen, geben wir in den Spalten QNAME, FLAG, RNAME, POS, CIGAR und SEQ Informationen an. 
+For meaningful visualization, we provide information in the columns QNAME, FLAG, RNAME, POS, CIGAR, and SEQ.
 
-Die anderen Spalten sind für uns aktuell nicht wichtig: Die Spalten RNEXT und PNEXT sind für Fälle relevant, in denen man den Read während der Analyse in mehrere Teile zerschneidet und die unterschiedlichen Teile auf unterschiedliche Stellen der Referenz bzw. unterschiedliche Referenzen mappt (z.B. um strukturelle Variationen zu finden). TLEN ist für paired-end-Sequenzierung relevant. In QUAL kann ein Mapper angeben, wie sicher er sich bei der Zuordnung des Reads an genau dieser Stelle in der Referenz ist.
+The other columns are not important for us currently: The columns RNEXT and PNEXT are relevant for cases where the read is split into multiple parts during analysis and the different parts map to different locations on the reference or different references (e.g., to find structural variations). TLEN is relevant for paired-end sequencing. In QUAL, a mapper can indicate how confident they are in assigning the read to that exact location on the reference.
 
-Die für uns relevanten Spalten müssten also an sich selbsterklärend sein. Einzige Ausnahme ist der CIGAR-String: Dieser ist eine verkürzte Darstellung dessen, wie ein Read mappt. Er setzt sich aus einer Reihe von Basenzahlen gefolgt von Statusinformationen zusammen. Die Statusinformationen können beispielsweise ```M``` für "match" (Base konnte der Referenzsequenz zugeordnet werden) oder ```D``` (Deletion - Base ist in der Referenzsequenz vorhanden aber fehlt im Read) stehen. ```25M2D10M``` würde also bedeuten: Die ersten 25 Basen passen, danach sind 2 Basel deletiert, und danach passen wieder 10 Basen. Da wir keine Deletionen betrachten, ist der CIGAR-String in unserem Fall immer ```<Readlänge>M```.
+The relevant columns should be self-explanatory. The only exception is the CIGAR string: This is a condensed representation of how a read maps. It consists of a series of base numbers followed by status information. The status information can include, for example, M for "match" (base could be assigned to the reference sequence) or D (deletion - base is present in the reference sequence but missing in the read). 25M2D10M would thus mean: the first 25 bases fit, then 2 bases are deleted, and then 10 bases fit again. Since we do not consider deletions, the CIGAR string in our case is always <Read length>M.
 
-Die folgende Zeile aus der Beispiel-SAM-Datei:
+The following line from the example SAM file:
 
 ```text
 Read_95	0	GQ359764.1	10	255	50M	*	0	0	TCCATGGTGTATCCTGTTCCTGTTCCATGGCTGTATGGAGGATCTCCAGT	*
 ```
 
-bedeutet also: Der Read mit dem Namen "Read_95" (QNAME=Read_95) mappt (FLAG=0) auf der Referenzsequenz "GQ359764.1" (RNAME=GQ359764.1) an Position 10 (POS=10) ohne Deletionen oder Insertionen (CIGAR=50M), und seine Sequenz lautet "TCCATGGTGTATCCTGTTCCTGTTCCATGGCTGTATGGAGGATCTCCAGT". Die anderen Felder sind mit ihren N/A-Werten ausgefüllt.
+means: The read named "Read_95" (QNAME=Read_95) maps (FLAG=0) to the reference sequence "GQ359764.1" (RNAME=GQ359764.1) at position 10 (POS=10) without deletions or insertions (CIGAR=50M), and its sequence reads "TCCATGGTGTATCCTGTTCCTGTTCCATGGCTGTATGGAGGATCTCCAGT". The other fields are filled with their N/A values.
 
-### Implementierung des SAM-Exports
+### Implementation of SAM Export
 
-Implementieren Sie mit diesem Wissen eine Klasse ```SAMWriter``` mit den folgenden Methoden:
-* ```__init__(self, mapping)```: Constructor, nimmt ein ```Mapping```-Objekt
-* ```write_mapping(self, filename)```: Schreibt das Mapping in das angegebene SAM-File
+Implement a class ```SAMWriter``` with the following methods:
+* ```__init__(self, mapping)```: Constructor, takes a ```Mapping```-object
+* ```write_mapping(self, filename)```: Writes the mapping to the specified SAM file
 
-### Visualisierung mittels Tablet
+### Visualization Using Tablet
 
-Mappen Sie nun die Datei [data/fluA_reads.fasta](data/fluA_reads.fasta) auf [data/fluA_reads.fasta](data/fluA.fasta) und speichern Sie das Ergebnis als fluA_mapping.sam. 
+Now map the file data/fluA_reads.fasta to data/fluA.fasta and save the result as fluA_mapping.sam.
 
-Laden Sie dann das Programm [Tablet](https://ics.hutton.ac.uk/tablet/) herunter und öffnen Sie (Klick auf den Button "Open Assembly" oben links) die Dateien fluA_mapping.sam sowie die Referenz [data/fluA_reads.fasta](data/fluA.fasta). Sie müssten dann eine Ansicht erhalten wie in diesem Bild:
+Then download the program  [Tablet](https://ics.hutton.ac.uk/tablet/) and open (click the "Open Assembly" button in the top left) the files fluA_mapping.sam and the reference [data/fluA_reads.fasta](data/fluA.fasta). You should then receive a view like in this picture:
 
 ![t1](Bilder/Tablet1.png)
 
-Sie erkennen oben eine schematische Ansicht der gesamten Referenz mit den darauf gemappten Reads, dadrunter sehen Sie eine Detailansicht: Zuerst die in Aminosäuren translatierte Sequenz, dann die Nukleotidsequenz der Referenz, und dann die einzelnen Reads.
+You see a schematic view of the entire reference with the mapped reads on it, below you see a detail view: First, the sequence translated into amino acids, then the nucleotide sequence of the reference, and then the individual reads.
 
-Wenn Sie den Mauszeiger über eine Base halten, bekommen Sie eine Information über den Read. Auf der Koordinatenachse zwischen Referenzsequenz und Reads wird zudem in roter Farbe die Position angezeigt - in diesem Fall ist zu erkennen, dass die erste Base "T" aus dem Read "Read_95" an Position 10 der Referenzsequenz gemappt wurde.
+If you hover the mouse pointer over a base, you get information about the read. The coordinate axis between the reference sequence and the reads also shows the position in red - in this case, it can be seen that the first base "T" from the read "Read_95" was mapped at position 10 of the reference sequence.
 
-Wählen Sie im Reiter "Color Schemes" die Option "Variants", werden alle Basen der Reads, die mit der Referenzsequenz übereinstimmen, ausgegraut:
+If you select the "Variants" option in the "Color Schemes" tab, all bases of the reads that match the reference sequence are grayed out:
 
 ![t2](Bilder/Tablet2.png)
 
-Sie erkennen nun oben in der Übersicht zwei rote Streifen, die Unterschiede zu der Referenzsequenz anzeigen. Die Hervorhebungen in der Übersicht sind leider häufig nicht allumfassend. Das bedeutet Sie müssen einmal durch das gesammte Mapping hindurch scrollen um alle Varianten zu finden. Sofern Sie das "Variants" Scheme ausgewählt haben werden die Abweichungen auch in der Readansicht in rot hervorgehoben.
+You now recognize two red stripes at the top indicating differences from the reference sequence. The highlights in the overview are unfortunately not comprehensive. This means you must scroll through the entire mapping to find all variants. If you have selected the "Variants" scheme, the deviations will also be highlighted in red in the read view.
 
-### Tablet-Aufgabe
+### Tablet Task
 
-Tragen Sie hier bitte in dem Format ```<Referenz-Base><Position><Neue Base>``` ein, welche vier Mutationen Sie in dem Mapping erkennen können (```T10A``` würde also beispielsweise bedeuten, dass in der Referenz an Position 10 die Base T steht, es aber laut der Reads an dieser Position eine Mutation zu A gibt):
+Please enter in the format ```<Reference Base><Position><New Base>``` which four mutations you can recognize in the mapping (```T10A``` would mean, for example, that the base T stands in the reference at position 10, but according to the reads there is a mutation to A at this position):
 
 ```text
 Mutation 1: G960C
@@ -79,88 +79,90 @@ Mutation 3: G1437T
 Mutation 4: G1833T
 ```
 
-## Antibiotika-Resistenzen
+## Antibiotic Resistances
 
-Eine Aufgabe, bei der die Erkennung solcher Mutationen besonders wichtig ist, ist die Behandlung bekterieller Infektionen. Bakterien können Resistenzen gegen Antibiotika entwickeln - die Gabe solcher Antibiotika kann dann nicht mehr zur Heilung beitragen. Es gibt aber mittlerweile viele gut untersuchte Zusammenhänge zwischen Mutationen in bestimmten Genen und dadurch vermittelten Antibiotikaresistenzen. Entsprechend kann vor einer Behandlung eine Sequenzierung des Bakteriums erfolgen, und anhand der vorhandenen Mutationen kann eine Behandlungsentscheidung getroffen werden.
+One task where recognizing such mutations is particularly important is the treatment of bacterial infections. Bacteria can develop resistances to antibiotics - the administration of such antibiotics can then no longer contribute to healing. However, there are now many well-studied relationships between mutations in certain genes and the resulting antibiotic resistances. Accordingly, before treatment, a bacterium can be sequenced, and a treatment decision can be made based on the existing mutations.
 
-Ein besonders prominentes Beispiel ist das Bakterium Staphylococcus aureus, welches schnell Antibiotikaresistenzen ansammelt. Infektionen mit multiresistenten S. aureus (MRSA) stellen die Medizin vor eine große Herausforderung, da im schlimmsten Fall keine der verfügbaren Antibiotika mehr gegen sie funktionieren (bzw. nur noch sogenannte "drugs of last resort" funktionieren - Antibiotika, die für besonders schwere Fälle zurückgehalten werden, da durch einen stark reglementierten Einsatz Bakterien noch keinem Evolutionsdruck ausgesetzt wurden, um gegen diese Resistenzen zu entwickeln). 
+A particularly prominent example is the bacterium Staphylococcus aureus, which quickly accumulates antibiotic resistances. Infections with multi-resistant S. aureus (MRSA) present a major challenge to medicine, as in the worst case, none of the available antibiotics may work against them (or only so-called "drugs of last resort" work - antibiotics that are held back for particularly severe cases, as bacteria have not yet been subjected to evolutionary pressure to develop resistances against these).
 
-In dieser Aufgabe untersuchen Sie die Proben von 4 mit S. aureus infizierten Personen auf Mutationen im rpoB-Gen des Bakteriums. Es stehen zur Behandlung die folgenden zwei Antibiotika zur Verfügung - in Klammern steht jeweils die Priorität, mit der sie eingesetzt werden sollten, wenn möglich sollte das Antibiotikum mit der höchsten Priorität (der kleinsten Zahl dahinter) eingesetzt werden:
+In this task, you will examine the samples of 4 individuals infected with S. aureus for mutations in the rpoB gene of the bacterium. The following two antibiotics are available for treatment - in brackets is the priority with which they should be used, if possible the antibiotic with the highest priority (the smallest number behind it) should be used:
 
 * Daptomycin (1)
 * Rifampicin (2)
 
-Es sind Ihnen zudem die folgenden drei Mutationen bekannt, die Resistenzen vermitteln:
+The following three mutations are also known to convey resistances:
 
-* C1862A: Resistenz gegen Daptomycin
-* T2858G: Resistenz gegen Daptomycin
-* C1402A: Resistenz gegen Rifampicin
+* C1862A: Resistance against Daptomycin
+* T2858G: Resistance against Daptomycin
+* C1402A: Resistance against Rifampicin
 
-Mappen Sie die Read-Sequenzen der 4 Personen ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) auf die rpoB-Referenz ([data/rpoB.fasta](data/rpoB.fasta)) und tragen Sie hier ein, welche Mutation(en) Sie identifizieren konnten und welches Antibiotikum Sie empfehlen würden:
+Map the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) and enter here which mutation(s) you could identify and which antibiotic you would recommend:
 
 ```text
-Person 1 - Mutation(en): keine Mutationen, Empfehlung: Daptomycin 
-Person 2 - Mutation(en): keine Mutationen, Empfehlung: Daptomycin 
-Person 3 - Mutation(en): C1402A (viele), Empfehlung: Daptomycin 
-Person 4 - Mutation(en): T2858G (eine), Empfehlung: Rifampicin 
+Person 1 - Mutation(en): no mutations, Recommendation: Daptomycin 
+Person 2 - Mutation(en): no mutations, Recommendation: Daptomycin 
+Person 3 - Mutation(en): C1402A (many), Recommendation: Daptomycin 
+Person 4 - Mutation(en): T2858G (one), Recommendation: Rifampicin 
 ```
 
-Nutzen Sie für das Mapping dabei auch eine Seedlänge von > 10. Lassen Sie sich bitte von Unterschieden zur Referenzsequenz, die nur in einzelnen Reads vorkommen, nicht verwirren - das ist ein realistischer Datensatz und die Reads enthalten Sequenzierfehler.
+Use a seed length of > 10 for the mapping. Please do not be confused by differences from the reference sequence that only occur in individual reads - this is a realistic dataset and the reads contain sequencing errors.
 
-## Fehlerkorrektur
+## Error Correction
 
-Wie Ihnen in der Identifikation der Antibiotikaresistenzen aufgefallen sein könnte, sind die realen Reads mit Sequenzierfehlern behaftet. Diese können die Analyse erschweren oder gar zu Fehlinterpretationen der Daten führen.
+As you may have noticed in the identification of antibiotic resistances, the real reads are affected by sequencing errors. These can complicate the analysis or even lead to misinterpretations of the data.
 
-Eine Möglichkeit zur Korrektur dieser Fehler ist das k-mer-Spektrum. Dabei wird davon ausgegangen, dass durch eine große Coverage mit großteils korrekten Reads jedes sequenzierte k-mer mehrmals in unterschiedlichen Reads repräsentiert sein sollte. Kommt ein k-mer deutlich seltener vor, als die anderen k-mere, ist es vermutlich nicht auf eine Mutation (die ja von mehreren Reads abgedeckt sein sollte und deren k-mer entsprechend mehrmals vorkommen sollte) sondern auf einen Sequenzierfehler zurückzuführen.
+One way to correct these errors is the k-mer spectrum. It is assumed that because there is a large coverage with mostly correct reads, every sequenced k-mer should be represented several times in different reads. If a k-mer appears significantly less often than the other k-mers, it is probably not due to a mutation (which should be covered by several reads and whose k-mer should therefore appear several times) but due to a sequencing error.
 
-Nehmen wir als Beispiel ein kurzes Genom, welches fehlerfrei sequenziert wird, und das 3-mer-Spektrum dazu: 
+Let's take an example of a short genome, which is sequenced error-free, and the 3-mer spectrum for it:
 
 ![sp1](Bilder/Spectrum1.png)
 
-In diesem Fall wurde das Genom mit 5 fehlerfreien Reads abgedeckt, es ergeben sich 4 3-mere mit den Häufigkeiten 2, 4, 4 und 2.
+In this case, the genome was covered with 5 error-free reads, resulting in 4 3-mers with the frequencies 2, 4, 4, and 2.
 
-Enthält aber einer der Reads einen Fehler (in diesem Fall wird die 3. Base von Read 2 fehlerhafter Weise als C gelesen), verändert sich das Spektrum:
+However, if one of the reads contains an error (in this case, the 3rd base of Read 2 is erroneously read as C), the spectrum changes:
 
 ![sp2](Bilder/Spectrum2.png)
 
-Es kommen durch den Fehler drei neue k-mere hinzu, die jeweils nur ein Mal auftreten.
 
-Anhand dieser Information kann eine Korrektur erfolgen: Es wird ein Schwellenwert definiert, ab dem ein k-mer als potenziell fehelrhaft eingestuft wird. Für jedes k-mer, welches seltener als dieser Schwellenwert vorkommt, werden folgende Schritte durchlaufen:
+The error adds three new k-mers, each appearing only once.
 
-* Für jede Base X aus dem k-mer:
-    * Für jede mögliche Base Y (A, G, T und C):
-        * Generiere ein Kandidaten-k-mer indem die Base X durch die Base Y ersetzt wird
-        * Falls das Kandidaten-k-mer auch im Datensatz vorkommt und zwar <ins>mindestens so häufig</ins> wie der Schwellenwert: Merke es als mögliche Korrektur
-* Falls Kandidaten-k-mere gefunden wurden: Ersetze das k-mer durch das Kandidaten-k-mer welches am häufigsten im Datensatz vorkommt (bei zwei Kandidaten-k-meren mit der gleichen Häufigkeit wähle zufällig eins davon)
+Based on this information, a correction can be made: A threshold is defined, below which a k-mer is considered potentially faulty. For each k-mer that occurs less often than this threshold, the following steps are run through:
 
-Für das Mapping müssen die so identifizierten korrigierbaren k-mere in allen Reads ersetzt werden, in denen sie vorkommen.
+For each base X in the k-mer:
+For each possible base Y (A, G, T, and C):
+Generate a candidate k-mer by replacing the base X with the base Y
+If the candidate k-mer also occurs in the dataset and at least as often as the threshold: Note it as a possible correction
+If candidate k-mers were found: Replace the k-mer with the candidate k-mer that occurs most frequently in the dataset (in the case of two candidate k-mers with the same frequency, choose one at random)
+
+
+For the mapping, the k-mers identified as correctable in all reads in which they occur must be replaced.
 
 ### Implementation
 
-Implementieren Sie die k-mer-Spektrum-Fehlerkorrektur wie folgt.
+Implement the k-mer spectrum error correction as follows.
 
-Implementieren Sie zunächst eine Klasse ```ReadPolisher``` mit den folgenden Methoden:
-* ```__init__(self, kmerlen)```: Constructor, bekommt die zu verwendende k-mer-Länge
-* ```add_read(self, readseq)```: Fügt die übergebene Readsequenz dem k-mer-Spektrum hinzu
-* ```get_replacements(self, minfreq)```: Berechnet für die k-mere, die seltener als ```minfreq``` im k-mer-Spektrum vorkommen, die mögliche Korrektur und gibt ein entsprechendes dictionary zurück. Darin sind keys die korrigierbaren k-mere, values sind die Korrekturen (in dem obigen Beispiel wäre also z.B. bei minfreq=2 ein mögliches key-value-Paar "GCT":"GTT", welches aussagt, dass das k-mer "GCT" durch das k-mer "GTT" ersetzt werden soll)
+First, implement a class ```ReadPolisher``` with the following methods:
+* ```__init__(self, kmerlen)```: Constructor, receives the k-mer length to be used
+* ```add_read(self, readseq)```: Adds the provided read sequence to the k-mer spectrum
+* ```get_replacements(self, minfreq)```: Calculates possible corrections for the k-mers that occur less often than ```minfreq``` in the k-mer spectrum and returns a corresponding dictionary. In it, keys are the correctable k-mers, values are the corrections (in the above example, a possible key-value pair might be "GCT":"GTT", which indicates that the k-mer "GCT" should be replaced with the k-mer "GTT")
   
-Erweitern Sie zudem die Klasse ```Read``` um die Methode ```replace_kmers(self, replacements)```, welche die dictionary aus ```get_replacements``` bekommt und alle darin als key vorkommenden k-mere, die in dem Read vorhanden sind, durch den jeweiligen value ersetzt. Das ist zwar nicht die effizienteste Variante (effizienter wäre es, sich in ```ReadPolisher``` die Information zu merken, in welchen Reads welche k-mere vorkommen und dann nur dort die Ersetzungen vorzunehmen), aber das würde die Abschlussaufgabe zu lang machen.
+Also, expand the ```Read``` class with the method ```replace_kmers(self, replacements)```, which receives the dictionary from ```get_replacements``` and replaces all k-mers occurring in the read that are listed as keys with their respective value. This is not the most efficient variant (more efficient would be to remember in ```ReadPolisher`` which reads contain which k-mers and then only make replacements there), but that would make the final task too long.
 
-### Anwendung
+### Application
 
-Verwenden Sie Ihre Read-Korrektur, um nochmal die Read-Sequenzen der 4 Personen ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) auf die rpoB-Referenz ([data/rpoB.fasta](data/rpoB.fasta)) zu mappen nutzen Sie erneut eine Seedlänge > 10. Sehen Sie einen Unterschied? Welche k-mer-Längen und cutoffs erscheinen Ihnen für die Korrektur sinnvoll? 
+Use your read correction to remap the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) using a seed length > 10 again. Do you see a difference? Which k-mer lengths and cutoffs seem sensible for the correction?
 
-Tragen Sie hier ein, welche Mutation(en) Sie identifizieren konnten und welches Antibiotikum Sie nun empfehlen würden (verwenden Sie die Parameter, die Sie am sinnvollsten finden, probieren Sie aber zumindest ein Mal bei [data/patient2.fasta](data/patient2.fasta) eine k-mer-Länge von 15 und einen frequency cutoff von 3 aus):
+Enter here which mutation(s) you could identify and which antibiotic you would now recommend (use the parameters you find most sensible, but try at least once with [data/patient2.fasta](data/patient2.fasta) a k-mer length of 15 and a frequency cutoff of 3):
 
 ```text
-Person 1 - Mutation(en): keine Mutationen, Empfehlung: Daptomycin 
-Person 2 - Mutation(en): C1862A (viele), Empfehlung: Rifampicin 
-Person 3 - Mutation(en): C1402A (viele), Empfehlung: Daptomycin 
-Person 4 - Mutation(en): keine Mutationen, Empfehlung: Daptomycin 
+Person 1 - Mutation(s): no mutations, Recommendation: Daptomycin 
+Person 2 - Mutation(s): C1862A (many), Recommendation: Rifampicin 
+Person 3 - Mutation(s): C1402A (many), Recommendation: Daptomycin 
+Person 4 - Mutation(s): no mutations, Recommendation: Daptomycin 
 ```
 
-Sehen Sie einen Unterschied in den Empfehlungen zu denen, die Sie ohne Fehlerkorrektur gegeben haben? Beschreiben Sie kurz, was der Unterschied ist, und wie dieser durch die Fehlerkorrektur zustande gekommen ist (kein Roman, 5-6 Sätze reichen aus):
+Do you see a difference in the recommendations compared to those you gave without error correction? Briefly describe what the difference is and how it came about through error correction (no novel, 5-6 sentences are enough):
 
 ```text
-Der Unterschied besteht darin, dass in der "korrekten" Version der Antworten mehr Informationen enthalten sind. Zum Beispiel wussten wir vor der korrigierten Version des Codes nicht, dass Patient Nummer 2 eine Resistenz gegen das Antibiotikum Daptomycin hat, aber jetzt wissen wir es und können präzisere Empfehlungen geben. Außerdem haben wir wahrscheinlich vor der korrigierten Version des Codes dem Patienten Nummer 4 eine falsche Empfehlung gegeben, da in der korrigierten Version des Codes keine Mutationen bei dieser Person gefunden wurden.
+The difference is that in the "corrected" version of the responses, more information is included. For example, we did not know before the corrected version of the code that patient number 2 had a resistance to the antibiotic Daptomycin, but now we do and can give more precise recommendations. Additionally, we probably gave patient number 4 an incorrect recommendation before the corrected version of the code, as in the corrected version of the code no mutations were found in this person.
 ```
