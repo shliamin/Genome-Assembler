@@ -1,29 +1,33 @@
 class Sequence:
+    # Initialize a sequence object with name and bases from given lines
     def __init__(self, lines):
-        self.name = lines[0].strip()[1:]
-        self.bases = "".join([x.strip() for x in lines[1:]]).upper()
+        self.name = lines[0].strip()[1:]  # Extract the sequence name (excluding '>')
+        self.bases = "".join([x.strip() for x in lines[1:]]).upper()  # Join and capitalize the base sequences
 
+    # String representation of the sequence
     def __str__(self):
         return self.name + ": " + self.bases[:20] + "..."
 
+    # Representation of the sequence object (same as __str__)
     def __repr__(self):
         return self.__str__()
 
-
 class Read(Sequence):
+    # Get the initial segment of bases as a seed of specified length
     def get_seed(self, seedlength):
         return self.bases[:seedlength]
 
+    # Replace specified k-mers in the bases with given replacements
     def replace_kmers(self, replacements):
         for kmer, replacement in replacements.items():
             self.bases = self.bases.replace(kmer, replacement)
 
-
 class Reference(Sequence):
     def __init__(self, lines):
-        self.kmers = None
-        super().__init__(lines)
+        self.kmers = None  # Initialize k-mers as None
+        super().__init__(lines)  # Call the parent constructor
 
+    # Calculate all k-mers of a given size within the sequence
     def calculate_kmers(self, kmersize):
         self.kmers = {}
         for pos in range(0, len(self.bases) - kmersize + 1):
@@ -32,6 +36,7 @@ class Reference(Sequence):
                 self.kmers[kmer] = []
             self.kmers[kmer] += [pos]
 
+    # Get positions of a specified k-mer within the sequence
     def get_kmer_positions(self, kmer):
         if self.kmers is None or len(next(iter(self.kmers))) != len(kmer):
             self.calculate_kmers(len(kmer))
@@ -39,6 +44,7 @@ class Reference(Sequence):
             return []
         return self.kmers[kmer]
 
+    # Count mismatches between the read and the sequence at a given position
     def count_mismatches(self, read, position):
         mismatches = 0
         for pos in range(position, position + len(read.bases)):
@@ -50,33 +56,35 @@ class Reference(Sequence):
         mismatches += position + len(read.bases) - pos - 1
         return mismatches
 
-
 class Mapping:
     def __init__(self, reference):
         self.reference = reference
         self.reads = {}
 
+    # Add a read at a specific position
     def add_read(self, read, position):
         if position not in self.reads:
             self.reads[position] = []
         self.reads[position] += [read]
 
+    # Get all reads mapped at a specific position
     def get_reads_at_position(self, position):
         if position not in self.reads:
             return []
         return self.reads[position]
 
+    # String representation of the mapping
     def __str__(self):
         res = ["Mapping to " + self.reference.name]
         for pos in self.reads:
             res += ["  " + str(len(self.reads[pos])) + " reads mapping at " + str(pos)]
         return "\n".join(res)
 
-
 class SAMWriter:
     def __init__(self, mapping):
         self.mapping = mapping
 
+    # Write the mapping to a SAM file
     def write_mapping(self, filename):
         myfile = open(filename, "w")
         refname = self.mapping.reference.name.split(" ")[0]
@@ -88,12 +96,12 @@ class SAMWriter:
                 myfile.write("\n")
         myfile.close()
 
-
 class ReadPolisher:
     def __init__(self, kmerlen):
         self.kmer_length = kmerlen
         self.spectrum = {}
 
+    # Add a read sequence to the polisher
     def add_read(self, readseq):
         kmers = []
         k = self.kmer_length
@@ -102,6 +110,7 @@ class ReadPolisher:
             kmers.append(kmer)
         self.create_spectrum(kmers)
 
+    # Create a k-mer spectrum from a list of k-mers
     def create_spectrum(self, kmers):
         for kmer in kmers:
             if kmer in self.spectrum:
@@ -109,6 +118,7 @@ class ReadPolisher:
             else:
                 self.spectrum[kmer] = 1
 
+    # Get replacement k-mers based on minimum frequency
     def get_replacements(self, minfreq):
         corrections = {}
         for kmer, count in self.spectrum.items():
@@ -124,7 +134,7 @@ class ReadPolisher:
                     corrections[kmer] = most_frequent_candidate
         return corrections
 
-
+# Read a FASTA file and create instances of the given class
 def read_fasta(fastafile, klassname):
     klass = globals()[klassname]
     f = open(fastafile, "r")
@@ -139,7 +149,7 @@ def read_fasta(fastafile, klassname):
     f.close()
     return reads
 
-
+# Map reads to a reference sequence with specified k-mer size and max mismatches
 def map_reads(reads, reference, kmersize, max_mismatches):
     mapping = Mapping(reference)
     reference.calculate_kmers(kmersize)
@@ -152,11 +162,10 @@ def map_reads(reads, reference, kmersize, max_mismatches):
                 mapping.add_read(read, position)
     return mapping
 
-
 def main():
-    # ---------- Tablet-Aufgabe ---------
-    # Mappen wir nun die Datei (z.B. data/fluA_reads.fasta auf data/fluA_reads.fasta )
-    # und speichern wir das Ergebnis als z.B. fluA_mapping.sam.
+    # ---------- Tablet Task ---------
+    # Map the file (e.g., data/fluA_reads.fasta to data/fluA_reads.fasta)
+    # and save the result as, e.g., fluA_mapping.sam.
     # reads = read_fasta("data/fluA_reads.fasta", Read.__name__)
     # reference = read_fasta("data/fluA.fasta", Reference.__name__)[0]
     # mapping = map_reads(reads, reference, 8, 5)
@@ -164,16 +173,16 @@ def main():
     # writer = SAMWriter(mapping)
     # writer.write_mapping("data/fluA_mapping.sam")
 
-    # ---------- Antibiotika-Resistenzen ---------
-    # Mappen wir die Read-Sequenzen der 4 Personen (1 bis 4):
+    # ---------- Antibiotic Resistance ---------
+    # Map the read sequences of the 4 people (1 to 4):
     # reads = read_fasta("data/patient4.fasta", Read.__name__)
     # reference = read_fasta("data/rpoB.fasta", Reference.__name__)[0]
     # mapping = map_reads(reads, reference, 11, 5)
     # writer = SAMWriter(mapping)
     # writer.write_mapping("data/patient4.sam")
 
-    # ---------- Anwendung ---------
-    # Verwenden wir nun unsere ReadPolisher:
+    # ---------- Application ---------
+    # Now use our ReadPolisher:
     reads = read_fasta("data/patient4.fasta", Read.__name__)
     reference = read_fasta("data/rpoB.fasta", Reference.__name__)[0]
     polisher = ReadPolisher(15)
@@ -189,7 +198,6 @@ def main():
     mapping = map_reads(reads, reference, 15, 3)
     writer = SAMWriter(mapping)
     writer.write_mapping("data/mapping_p4_corrected.sam")
-
 
 if __name__ == "__main__":
     main()
