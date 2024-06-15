@@ -2,7 +2,7 @@
 
 ## SAM Files and Visualization of Mappings
 
-For the list of mapping reads that we output in the last task, there is also a standard format in bioinformatics: The Sequence Alignment/Map Format, or SAM. It contains information about the reference sequence used in a mapping as well as the mapping reads. You can find the complete format specification with all possible additional information at the given link; we use only a minimal version. An example SAM file can be found at data/minimapping.sam.
+For the list of mapping reads there is also a standard format in bioinformatics: The Sequence Alignment/Map Format, or SAM. It contains information about the reference sequence used in a mapping as well as the mapping reads. You can find the complete format specification with all possible additional information at the given link; we use only a minimal version. 
 
 The SAM format is line-based, with each line containing one or more tab-separated entries.
 
@@ -46,13 +46,13 @@ means: The read named "Read_95" (QNAME=Read_95) maps (FLAG=0) to the reference s
 
 ### Implementation of SAM Export
 
-Implement a class ```SAMWriter``` with the following methods:
+Let's implement a class ```SAMWriter``` with the following methods:
 * ```__init__(self, mapping)```: Constructor, takes a ```Mapping```-object
 * ```write_mapping(self, filename)```: Writes the mapping to the specified SAM file
 
 ### Visualization Using Tablet
 
-Now map the file data/fluA_reads.fasta to data/fluA.fasta and save the result as fluA_mapping.sam.
+Now let's map the file data/fluA_reads.fasta to data/fluA.fasta and save the result as fluA_mapping.sam.
 
 Then download the program  [Tablet](https://ics.hutton.ac.uk/tablet/) and open (click the "Open Assembly" button in the top left) the files fluA_mapping.sam and the reference [data/fluA_reads.fasta](data/fluA.fasta). You should then receive a view like in this picture:
 
@@ -96,7 +96,7 @@ The following three mutations are also known to convey resistances:
 * T2858G: Resistance against Daptomycin
 * C1402A: Resistance against Rifampicin
 
-Map the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) and enter here which mutation(s) we could identify and which antibiotic we would recommend:
+Let's map the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) and enter here which mutation(s) we could identify and which antibiotic we would recommend:
 
 ```text
 Person 1 - Mutation(en): no mutations, Recommendation: Daptomycin 
@@ -105,7 +105,7 @@ Person 3 - Mutation(en): C1402A (many), Recommendation: Daptomycin
 Person 4 - Mutation(en): T2858G (one), Recommendation: Rifampicin 
 ```
 
-Use a seed length of > 10 for the mapping. Please do not be confused by differences from the reference sequence that only occur in individual reads - this is a realistic dataset and the reads contain sequencing errors.
+We well use a seed length of > 10 for the mapping. Please do not be confused by differences from the reference sequence that only occur in individual reads - this is a realistic dataset and the reads contain sequencing errors.
 
 ## Error Correction
 
@@ -139,20 +139,20 @@ For the mapping, the k-mers identified as correctable in all reads in which they
 
 ### Implementation
 
-Implement the k-mer spectrum error correction as follows.
+Let's implement the k-mer spectrum error correction as follows.
 
-First, implement a class ```ReadPolisher``` with the following methods:
+First, we will implement a class ```ReadPolisher``` with the following methods:
 * ```__init__(self, kmerlen)```: Constructor, receives the k-mer length to be used
 * ```add_read(self, readseq)```: Adds the provided read sequence to the k-mer spectrum
 * ```get_replacements(self, minfreq)```: Calculates possible corrections for the k-mers that occur less often than ```minfreq``` in the k-mer spectrum and returns a corresponding dictionary. In it, keys are the correctable k-mers, values are the corrections (in the above example, a possible key-value pair might be "GCT":"GTT", which indicates that the k-mer "GCT" should be replaced with the k-mer "GTT")
   
-Also, expand the ```Read``` class with the method ```replace_kmers(self, replacements)```, which receives the dictionary from ```get_replacements``` and replaces all k-mers occurring in the read that are listed as keys with their respective value. This is not the most efficient variant (more efficient would be to remember in ```ReadPolisher`` which reads contain which k-mers and then only make replacements there), but that would make the final task too long.
+Also, let's expand the ```Read``` class with the method ```replace_kmers(self, replacements)```, which receives the dictionary from ```get_replacements``` and replaces all k-mers occurring in the read that are listed as keys with their respective value. This is not the most efficient variant (more efficient would be to remember in ```ReadPolisher`` which reads contain which k-mers and then only make replacements there), but that would make the final task too long.
 
 ### Application
 
-Use wer read correction to remap the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) using a seed length > 10 again. Do we see a difference? Which k-mer lengths and cutoffs seem sensible for the correction?
+We will use wer read correction to remap the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) using a seed length > 10 again. Do we see a difference? Yes. Which k-mer lengths and cutoffs seem sensible for the correction?
 
-Enter here which mutation(s) we could identify and which antibiotic we would now recommend (use the parameters we find most sensible, but try at least once with [data/patient2.fasta](data/patient2.fasta) a k-mer length of 15 and a frequency cutoff of 3):
+Here are mutations we could identify and which antibiotic we would now recommend (used the parameters we find most sensible, but tried at least once with [data/patient2.fasta](data/patient2.fasta) a k-mer length of 15 and a frequency cutoff of 3):
 
 ```text
 Person 1 - Mutation(s): no mutations, Recommendation: Daptomycin 
@@ -161,7 +161,7 @@ Person 3 - Mutation(s): C1402A (many), Recommendation: Daptomycin
 Person 4 - Mutation(s): no mutations, Recommendation: Daptomycin 
 ```
 
-Do we see a difference in the recommendations compared to those we gave without error correction? Briefly describe what the difference is and how it came about through error correction (no novel, 5-6 sentences are enough):
+Do we see a difference in the recommendations compared to those we gave without error correction? Yes. Description:
 
 ```text
 The difference is that in the "corrected" version of the responses, more information is included. For example, we did not know before the corrected version of the code that patient number 2 had a resistance to the antibiotic Daptomycin, but now we do and can give more precise recommendations. Additionally, we probably gave patient number 4 an incorrect recommendation before the corrected version of the code, as in the corrected version of the code no mutations were found in this person.
