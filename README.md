@@ -1,5 +1,3 @@
-## Introduction: SAM Files and Visualization of Mappings
-
 ### Efim Shlimain
 
 In this project, we will analyze and visualize sequence alignment data using the SAM format. Our goal is to understand how reads map to a reference sequence, identify mutations, and determine antibiotic resistances. We will create classes to write SAM files and correct sequencing errors using k-mer spectra. Lastly, we will map patient data to identify relevant mutations and suggest suitable antibiotics based on our results.
