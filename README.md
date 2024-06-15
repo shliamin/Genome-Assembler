@@ -1,6 +1,9 @@
+## Introduction: SAM Files and Visualization of Mappings
 
+### Efim Shlimain
 
-## SAM Files and Visualization of Mappings
+In this project, we will analyze and visualize sequence alignment data using the SAM format. Our goal is to understand how reads map to a reference sequence, identify mutations, and determine antibiotic resistances. We will create classes to write SAM files and correct sequencing errors using k-mer spectra. Lastly, we will map patient data to identify relevant mutations and suggest suitable antibiotics based on our results.
+
 
 For the list of mapping reads there is also a standard format in bioinformatics: The Sequence Alignment/Map Format, or SAM. It contains information about the reference sequence used in a mapping as well as the mapping reads. You can find the complete format specification with all possible additional information at the given link; we use only a minimal version. 
 
