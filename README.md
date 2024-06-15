@@ -310,10 +310,10 @@ The following three mutations are also known to convey resistances:
 Let's map the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) and enter here which mutation(s) we could identify and which antibiotic we would recommend:
 
 ```text
-Person 1 - Mutation(en): no mutations, Recommendation: Daptomycin 
-Person 2 - Mutation(en): no mutations, Recommendation: Daptomycin 
-Person 3 - Mutation(en): C1402A (many), Recommendation: Daptomycin 
-Person 4 - Mutation(en): T2858G (one), Recommendation: Rifampicin 
+Person 1 - Mutation(s): no mutations, Recommendation: Daptomycin 
+Person 2 - Mutation(s): no mutations, Recommendation: Daptomycin 
+Person 3 - Mutation(s): C1402A (many), Recommendation: Daptomycin 
+Person 4 - Mutation(s): T2858G (one), Recommendation: Rifampicin 
 ```
 
 We well use a seed length of > 10 for the mapping. Please do not be confused by differences from the reference sequence that only occur in individual reads - this is a realistic dataset and the reads contain sequencing errors.
