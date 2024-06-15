@@ -2,7 +2,7 @@
 
 ## SAM Files and Visualization of Mappings
 
-For the list of mapping reads that you output in the last task, there is also a standard format in bioinformatics: The Sequence Alignment/Map Format, or SAM. It contains information about the reference sequence used in a mapping as well as the mapping reads. You can find the complete format specification with all possible additional information at the given link; we use only a minimal version. An example SAM file can be found at data/minimapping.sam.
+For the list of mapping reads that we output in the last task, there is also a standard format in bioinformatics: The Sequence Alignment/Map Format, or SAM. It contains information about the reference sequence used in a mapping as well as the mapping reads. You can find the complete format specification with all possible additional information at the given link; we use only a minimal version. An example SAM file can be found at data/minimapping.sam.
 
 The SAM format is line-based, with each line containing one or more tab-separated entries.
 
@@ -58,19 +58,19 @@ Then download the program  [Tablet](https://ics.hutton.ac.uk/tablet/) and open (
 
 ![t1](Bilder/Tablet1.png)
 
-You see a schematic view of the entire reference with the mapped reads on it, below you see a detail view: First, the sequence translated into amino acids, then the nucleotide sequence of the reference, and then the individual reads.
+You see a schematic view of the entire reference with the mapped reads on it, below we see a detail view: First, the sequence translated into amino acids, then the nucleotide sequence of the reference, and then the individual reads.
 
-If you hover the mouse pointer over a base, you get information about the read. The coordinate axis between the reference sequence and the reads also shows the position in red - in this case, it can be seen that the first base "T" from the read "Read_95" was mapped at position 10 of the reference sequence.
+If we hover the mouse pointer over a base, we get information about the read. The coordinate axis between the reference sequence and the reads also shows the position in red - in this case, it can be seen that the first base "T" from the read "Read_95" was mapped at position 10 of the reference sequence.
 
-If you select the "Variants" option in the "Color Schemes" tab, all bases of the reads that match the reference sequence are grayed out:
+If we select the "Variants" option in the "Color Schemes" tab, all bases of the reads that match the reference sequence are grayed out:
 
 ![t2](Bilder/Tablet2.png)
 
-You now recognize two red stripes at the top indicating differences from the reference sequence. The highlights in the overview are unfortunately not comprehensive. This means you must scroll through the entire mapping to find all variants. If you have selected the "Variants" scheme, the deviations will also be highlighted in red in the read view.
+You now recognize two red stripes at the top indicating differences from the reference sequence. The highlights in the overview are unfortunately not comprehensive. This means we must scroll through the entire mapping to find all variants. If we have selected the "Variants" scheme, the deviations will also be highlighted in red in the read view.
 
 ### Tablet Task
 
-Please enter in the format ```<Reference Base><Position><New Base>``` which four mutations you can recognize in the mapping (```T10A``` would mean, for example, that the base T stands in the reference at position 10, but according to the reads there is a mutation to A at this position):
+We can enter now in the format ```<Reference Base><Position><New Base>``` which four mutations we can recognize in the mapping (```T10A``` would mean, for example, that the base T stands in the reference at position 10, but according to the reads there is a mutation to A at this position):
 
 ```text
 Mutation 1: G960C
@@ -85,7 +85,7 @@ One task where recognizing such mutations is particularly important is the treat
 
 A particularly prominent example is the bacterium Staphylococcus aureus, which quickly accumulates antibiotic resistances. Infections with multi-resistant S. aureus (MRSA) present a major challenge to medicine, as in the worst case, none of the available antibiotics may work against them (or only so-called "drugs of last resort" work - antibiotics that are held back for particularly severe cases, as bacteria have not yet been subjected to evolutionary pressure to develop resistances against these).
 
-In this task, you will examine the samples of 4 individuals infected with S. aureus for mutations in the rpoB gene of the bacterium. The following two antibiotics are available for treatment - in brackets is the priority with which they should be used, if possible the antibiotic with the highest priority (the smallest number behind it) should be used:
+In this task, we will examine the samples of 4 individuals infected with S. aureus for mutations in the rpoB gene of the bacterium. The following two antibiotics are available for treatment - in brackets is the priority with which they should be used, if possible the antibiotic with the highest priority (the smallest number behind it) should be used:
 
 * Daptomycin (1)
 * Rifampicin (2)
@@ -96,7 +96,7 @@ The following three mutations are also known to convey resistances:
 * T2858G: Resistance against Daptomycin
 * C1402A: Resistance against Rifampicin
 
-Map the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) and enter here which mutation(s) you could identify and which antibiotic you would recommend:
+Map the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) and enter here which mutation(s) we could identify and which antibiotic we would recommend:
 
 ```text
 Person 1 - Mutation(en): no mutations, Recommendation: Daptomycin 
@@ -109,7 +109,7 @@ Use a seed length of > 10 for the mapping. Please do not be confused by differen
 
 ## Error Correction
 
-As you may have noticed in the identification of antibiotic resistances, the real reads are affected by sequencing errors. These can complicate the analysis or even lead to misinterpretations of the data.
+As we may have noticed in the identification of antibiotic resistances, the real reads are affected by sequencing errors. These can complicate the analysis or even lead to misinterpretations of the data.
 
 One way to correct these errors is the k-mer spectrum. It is assumed that because there is a large coverage with mostly correct reads, every sequenced k-mer should be represented several times in different reads. If a k-mer appears significantly less often than the other k-mers, it is probably not due to a mutation (which should be covered by several reads and whose k-mer should therefore appear several times) but due to a sequencing error.
 
@@ -150,9 +150,9 @@ Also, expand the ```Read``` class with the method ```replace_kmers(self, replace
 
 ### Application
 
-Use your read correction to remap the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) using a seed length > 10 again. Do you see a difference? Which k-mer lengths and cutoffs seem sensible for the correction?
+Use wer read correction to remap the read sequences of the 4 individuals ([data/patient1.fasta](data/patient1.fasta) - [data/patient4.fasta](data/patient4.fasta)) to the rpoB reference ([data/rpoB.fasta](data/rpoB.fasta)) using a seed length > 10 again. Do we see a difference? Which k-mer lengths and cutoffs seem sensible for the correction?
 
-Enter here which mutation(s) you could identify and which antibiotic you would now recommend (use the parameters you find most sensible, but try at least once with [data/patient2.fasta](data/patient2.fasta) a k-mer length of 15 and a frequency cutoff of 3):
+Enter here which mutation(s) we could identify and which antibiotic we would now recommend (use the parameters we find most sensible, but try at least once with [data/patient2.fasta](data/patient2.fasta) a k-mer length of 15 and a frequency cutoff of 3):
 
 ```text
 Person 1 - Mutation(s): no mutations, Recommendation: Daptomycin 
@@ -161,7 +161,7 @@ Person 3 - Mutation(s): C1402A (many), Recommendation: Daptomycin
 Person 4 - Mutation(s): no mutations, Recommendation: Daptomycin 
 ```
 
-Do you see a difference in the recommendations compared to those you gave without error correction? Briefly describe what the difference is and how it came about through error correction (no novel, 5-6 sentences are enough):
+Do we see a difference in the recommendations compared to those we gave without error correction? Briefly describe what the difference is and how it came about through error correction (no novel, 5-6 sentences are enough):
 
 ```text
 The difference is that in the "corrected" version of the responses, more information is included. For example, we did not know before the corrected version of the code that patient number 2 had a resistance to the antibiotic Daptomycin, but now we do and can give more precise recommendations. Additionally, we probably gave patient number 4 an incorrect recommendation before the corrected version of the code, as in the corrected version of the code no mutations were found in this person.
